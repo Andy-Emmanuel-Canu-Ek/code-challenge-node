@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import UserModel, { User }  from '../models/userModel'
 import bcrypt from 'bcryptjs'
-
+import {generateJWT} from '../helpers/jwt'
 class AuthController{
 
     public async login(req: Request, res: Response) {
@@ -25,11 +25,13 @@ class AuthController{
                 })
             }
 
+            const token = await generateJWT(user_exist.id, user_exist.name);
 
             res.json({
                 ok: true,
                 user_id: user_exist._id,
-                name: user_exist.name
+                name: user_exist.name,
+                token
             })
 
         }catch(error){
@@ -66,12 +68,18 @@ class AuthController{
     
             await user.save()
             
+            const token = await generateJWT(user.id, user.name);
+        
+            //Generar JWT
+            
             res.status(201).json({
                 ok: true,
                 msg: "Usuario registrado correctamente",
                 user_id: user._id,
-                name: user.name
+                name: user.name,
+                token
             })
+
         }catch(error){
             console.log(error)
             res.status(500).json({
