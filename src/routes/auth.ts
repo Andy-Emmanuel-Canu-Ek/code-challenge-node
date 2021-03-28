@@ -9,7 +9,7 @@ router.get("/", authController.renewToken);
 router.post(
   "/",
   [
-    check("email", "El email es obligatorio").isEmail(),
+    check("email", "Email invalido").isEmail(),
     check(
       "password",
       "La contraseña debe tener un mínimo de 6 caracteres"
@@ -23,7 +23,7 @@ router.post(
   "/new",
   [
     check("name", "El nombre es obligatorio").not().isEmpty(),
-    check("email", "El email es obligatorio").isEmail(),
+    check("email", "Email invalido").isEmail(),
     check(
       "password",
       "La contraseña debe tener un mínimo de 6 caracteres"

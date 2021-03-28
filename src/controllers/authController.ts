@@ -4,8 +4,42 @@ import bcrypt from 'bcryptjs'
 
 class AuthController{
 
-    public login  (req: Request, res: Response) {
-        res.send('hello')
+    public async login(req: Request, res: Response) {
+        const { email, password } = req.body
+
+        try{
+            let user_exist: any = await UserModel.findOne({email})
+            if (!user_exist){
+                return res.status(400).json({
+                    ok: false,
+                    msg: "Usuario o contraseña invalida",
+                })
+            }
+
+            const validPass = bcrypt.compareSync(password, user_exist.password)
+
+            if(!validPass){
+                return res.status(400).json({
+                    ok: false,
+                    msg: "Usuario o contraseña invalido"
+                })
+            }
+
+
+            res.json({
+                ok: true,
+                user_id: user_exist._id,
+                name: user_exist.name
+            })
+
+        }catch(error){
+            console.log(error)
+            res.status(500).json({
+                ok: false,
+                msg: "Ocurrio un error. Por favor contactese con el administrador"
+            })
+        }
+
     }
 
     public async createUser(req: Request, res: Response) {
@@ -14,7 +48,7 @@ class AuthController{
         try{
             let user_exist = await UserModel.findOne({email})
             if (user_exist){
-                res.status(400).json({
+                return res.status(400).json({
                     ok: false,
                     msg: "Ya existe un usuario con ese correo",
                 })
@@ -36,7 +70,7 @@ class AuthController{
                 ok: true,
                 msg: "Usuario registrado correctamente",
                 user_id: user._id,
-                user_name: user.name
+                name: user.name
             })
         }catch(error){
             console.log(error)
