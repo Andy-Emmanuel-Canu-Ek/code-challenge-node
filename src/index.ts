@@ -1,3 +1,4 @@
+require('dotenv').config();
 import express from "express";
 
 //Initializations
@@ -13,6 +14,6 @@ app.use(express.json())
 //Static Files
 
 //Starting Server
-app.listen(process.env.PORT || 3000, () => {
-    console.log('Server port', process.env.PORT || 3000)
+app.listen(process.env.PORT, () => {
+    console.log('Server port', process.env.PORT)
 })
