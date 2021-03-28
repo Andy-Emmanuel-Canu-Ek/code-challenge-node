@@ -8,11 +8,6 @@ export interface User extends Document{
 }
 
 const UserSchema: Schema = new  Schema({
-    user_name: {
-        type: String,
-        require: true,
-        unique: true,
-    },
     name: {
         type: String,
         require: true
