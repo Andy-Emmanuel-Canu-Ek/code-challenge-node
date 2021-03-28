@@ -1,13 +1,17 @@
 require('dotenv').config();
 import express from "express";
+import AuthRoutes from "./routes/auth";
+import dbConnection from './database/config';
 
 //Initializations
 const app = express();
 
 //Settings
+dbConnection();
 
 //Middlewares
 app.use(express.json())
+app.use('/api/auth', AuthRoutes);
 
 //Routes
 
