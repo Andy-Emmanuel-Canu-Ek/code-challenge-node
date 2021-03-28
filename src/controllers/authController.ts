@@ -25,7 +25,7 @@ class AuthController{
                 })
             }
 
-            const token = await generateJWT(user_exist.id, user_exist.name);
+            const token = await generateJWT(user_exist._id, user_exist.name);
 
             res.json({
                 ok: true,
@@ -68,7 +68,7 @@ class AuthController{
     
             await user.save()
             
-            const token = await generateJWT(user.id, user.name);
+            const token = await generateJWT(user._id, user.name);
         
             //Generar JWT
             
@@ -90,8 +90,18 @@ class AuthController{
        
     }
 
-    public renewToken(req: Request, res: Response) {
-        res.send('hello')
+    public async renewToken(req: Request, res: Response) {
+        const {user_id, name} = req.body.user_token_obj;
+        
+        const token = await generateJWT(user_id, name);
+
+        res.status(201).json({
+            ok: true,
+            msj: "Token actualizado",
+            user_id, 
+            name, 
+            token
+        })
     }
 
     
