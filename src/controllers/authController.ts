@@ -78,28 +78,29 @@ class AuthController {
   }
 
   public async deleteUser(req: Request, res: Response) {
-    const { id } = req.body;
-    try {
-      let user_exist: any = await UserModel.find({_id: id});
-      console.log("user_exist", user_exist)
-      if (user_exist.length > 0) {
-        console.log("object", user_exist[0])
-        await user_exist[0].remove();
+    const user_id = req.params.id;
 
-        res.json({
-          ok: true,
-          msg: "Usuario eliminado correctamente",
-        });
+    try{
+       const user: any = await UserModel.findById(user_id);
 
-      } else {
-        return res.status(400).json({
+      if(!user){
+        return res.status(404).json({
           ok: false,
-          msg: "El usuario que intenta eliminar no existe",
-        });
+          msg: "El usuario que desea eliminar no existe"
+        })
       }
-    } catch (error) {
+
+      await UserModel.findByIdAndRemove(user.id);
+
+      return res.json({
+        ok: true,
+        msg: "El usuario se ha eliminado correctamente"
+      })
+
+    }catch(error){
       handleError(error, res);
     }
+
   }
 
   public async renewToken(req: Request, res: Response) {
