@@ -29,6 +29,7 @@ class AuthController {
 
       res.json({
         ok: true,
+        msg: "Acesso permitido",
         user_id: user_exist._id,
         name: user_exist.name,
         token,
@@ -116,6 +117,18 @@ class AuthController {
       token,
     });
   }
+
+  public async getUsers(req: Request, res: Response) {
+    const user = req.body.user_token_obj.user_id;
+    const user_list = await UserModel.find();
+
+    return res.json({
+      ok: true,
+      user_list
+    })
+
+  }
+
 }
 
 export const authController = new AuthController();

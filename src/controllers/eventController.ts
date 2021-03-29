@@ -16,6 +16,27 @@ class EventController {
 
   public async saveEvent(req: Request, res: Response) {
     try{
+      const {start_date, end_date} = req.body
+
+      const event_exists_start: Event[] = await EventModel.find(
+      {
+          "start_date": {"$gte": start_date, "$lt": end_date}, 
+      });
+
+      const event_exists_end: Event[] = await EventModel.find(
+      {
+          "end_date": {"$gte": start_date, "$lt": end_date}, 
+      });
+
+      const event_exists = [...event_exists_start, ...event_exists_end];
+
+      if(event_exists.length > 0){
+        return res.status(401).json({
+          ok: false,
+          msg: "Existen eventos guardados para esa misma fecha"
+        })
+      }
+
       const event: Event = new EventModel(req.body)
       event.user = req.body.user_token_obj.user_id;
       await event.save()

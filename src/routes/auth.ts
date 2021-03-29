@@ -10,6 +10,8 @@ router.delete("/:id", validateJWT, authController.deleteUser);
 
 router.get("/", validateJWT, authController.renewToken);
 
+router.get("/user_list", validateJWT, authController.getUsers);
+
 router.post(
   "/",
   [
