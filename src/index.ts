@@ -1,8 +1,9 @@
 require('dotenv').config();
 import express from "express";
 import AuthRoutes from "./routes/auth";
+import EventRoutes from "./routes/event";
 import dbConnection from './database/config';
-
+import cors from 'cors'
 //Initializations
 const app = express();
 
@@ -11,7 +12,9 @@ dbConnection();
 
 //Middlewares
 app.use(express.json())
+app.use(cors())
 app.use('/api/auth', AuthRoutes);
+app.use('/api/events', EventRoutes);
 
 //Routes
 

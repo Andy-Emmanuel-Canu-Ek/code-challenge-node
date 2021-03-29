@@ -1,10 +1,12 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 import { authController } from "../controllers/authController";
 import { check } from "express-validator";
 import { validationFields } from '../middlewares/fieldValidators'
 import { validateJWT } from '../middlewares/validateJWT'
 
 const router: Router = Router();
+
+router.delete("/:id", validateJWT, authController.deleteUser);
 
 router.get("/", validateJWT, authController.renewToken);
 
