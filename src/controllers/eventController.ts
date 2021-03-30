@@ -23,7 +23,7 @@ class EventController {
       if(event_exists){
         return res.status(401).json({
           ok: false,
-          msg: "Existen eventos guardados para esa misma fecha"
+          msg: "El usuario tiene eventos guardados para esa misma fecha y hora. Por favor seleccione otra fecha y hora"
         })
       }
 
@@ -45,7 +45,7 @@ class EventController {
   }
 
   public async updateEvent(req: Request, res: Response) {
-    const user_id = req.body.user_token_obj.user_id;
+    const user = req.body.user_token_obj.user_id;
     const event_id = req.params.id;
     try{
       const event: any = await EventModel.findById(event_id);
@@ -57,7 +57,7 @@ class EventController {
         })
       }
 
-      if (event.user.toString() !== user_id){
+      if (event.user.toString() !== user){
         return res.status(401).json({
           ok: false,
           msg: "No tiene permisos para poder modificar el evento"
@@ -66,15 +66,18 @@ class EventController {
 
       const updateEvent = {
         ...req.body,
-        user: user_id
+        user,
       }
 
       const evtUpdated = await EventModel.findByIdAndUpdate(event_id, updateEvent, {new: true});
 
+      const event_list = await EventModel.find({user});
+
       return res.json({
         ok: true,
         msg: "El evento se ha actualizado correctamente",
-        event: evtUpdated
+        event: evtUpdated,
+        event_list
       })
 
     }catch(error){
@@ -85,7 +88,7 @@ class EventController {
   }
 
   public async deleteEvent(req: Request, res: Response) {
-    const user_id = req.body.user_token_obj.user_id;
+    const user = req.body.user_token_obj.user_id;
     const event_id = req.params.id;
 
     try{
@@ -98,7 +101,7 @@ class EventController {
         })
       }
 
-      if (event.user.toString() !== user_id){
+      if (event.user.toString() !== user){
         return res.status(401).json({
           ok: false,
           msg: "No tiene permisos para poder eliminar el evento"
@@ -107,9 +110,12 @@ class EventController {
 
       await EventModel.findByIdAndRemove(event_id);
 
+      const event_list = await EventModel.find({user});
+
       return res.json({
         ok: true,
-        msg: "El evento se ha eliminado correctamente"
+        msg: "El evento se ha eliminado correctamente",
+        event_list
       })
 
     }catch(error){
