@@ -43,7 +43,7 @@ class AuthController {
     const { name, email, password } = req.body;
     console.log(req.body);
     try {
-      let user_exist = await UserModel.findOne({ email });
+      let user_exist = await UserModel.exists({ email });
       if (user_exist) {
         return res.status(400).json({
           ok: false,
