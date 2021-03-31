@@ -6,8 +6,8 @@
   "scripts": {
     "tsnode": "ts-node src/index.ts",
     "clean": "rm -rf build",
-    "build": "tsc",
-    "start": "tsc && node build/src",
+    "build": "tsc && node build/src",
+    "start": "node build/src",
     "dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
