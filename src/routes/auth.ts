@@ -8,7 +8,7 @@ const router: Router = Router();
 
 router.delete("/:id", validateJWT, authController.deleteUser);
 
-router.get("/", validateJWT, authController.renewToken);
+router.get("/renew", validateJWT, authController.renewToken);
 
 router.get("/user_list", validateJWT, authController.getUsers);
 
